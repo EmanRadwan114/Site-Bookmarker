@@ -40,8 +40,6 @@ function createBookmark() {
   } else {
     displayModalBox();
   }
-
-  console.log(bookmarksContainer);
 }
 
 // todo: call createBookmark Function when user click on addBtn
@@ -102,8 +100,6 @@ function setEditBookmark(indexValue) {
   addBtn.classList.replace("d-block", "d-none");
   editBtn.classList.replace("d-none", "d-block");
 
-  if (notRepeatName() === false) {
-  }
   directValidateInputs(
     validateSiteName,
     siteName,
@@ -163,30 +159,10 @@ editBtn.addEventListener("click", saveEditedBookmark);
 //todo: create functions that validate siteName input
 function validateSiteName() {
   var regexName = /^[A-Za-z0-9_]{2,}[A-Za-z0-9_\s]{0,}$/gm;
-  notRepeatName();
-
-  if (regexName.test(siteName.value) === true) {
-    return true;
-  }
-}
-
-siteName.onkeyup = validateSiteName;
-
-// todo: create a function that do not accept repeated names
-function notRepeatName() {
-  for (let i = 0; i < bookmarksContainer.length; i++) {
-    if (siteName.value === bookmarksContainer[i].bookmarkName) {
-      repeatWarning.innerHTML = `${siteName.value} is already present, please enter another name`;
-      return false;
-    } else {
-      repeatWarning.innerHTML = "";
-      return true;
-    }
-  }
+  return regexName.test(siteName.value);
 }
 
 //todo: create functions that validate siteUrl input
-
 function validateSiteUrl() {
   var regexUrl = /^(https:\/\/){1}[a-zA-Z0-9_?\/]{1,}\.[a-zA-Z0-9_?\/]{2,}$/gm;
   return regexUrl.test(siteUrl.value);
