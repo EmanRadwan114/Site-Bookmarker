@@ -166,8 +166,7 @@ function validateSiteName() {
 //todo: create functions that validate siteUrl input
 
 function validateSiteUrl() {
-  var regexUrl =
-    /^(https:\/\/){0,1}[a-zA-Z0-9_?\/]{1,}\.[a-zA-Z0-9_?\/]{2,}$/gm;
+  var regexUrl = /^(https:\/\/){1}[a-zA-Z0-9_?\/]{1,}\.[a-zA-Z0-9_?\/]{2,}$/gm;
   return regexUrl.test(siteUrl.value);
 }
 
