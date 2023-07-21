@@ -29,6 +29,14 @@ function createBookmark() {
     displayBookmarks(bookmarksContainer);
     localStorage.setItem("bookmarks", JSON.stringify(bookmarksContainer));
     resetBookmark();
+    resetStyle(siteName, "nameCheckIcon", "nameAlertIcon");
+    resetStyle(siteUrl, "urlCheckIcon", "urlAlertIcon");
+    siteName.onfocus = function () {
+      setInputFocus(siteName);
+    };
+    siteUrl.onfocus = function () {
+      setInputFocus(siteUrl);
+    };
   } else {
     displayModalBox();
   }
@@ -93,17 +101,58 @@ function setEditBookmark(indexValue) {
   siteUrl.value = bookmarksContainer[indexValue].bookmarkUrl;
   addBtn.classList.replace("d-block", "d-none");
   editBtn.classList.replace("d-none", "d-block");
+  directValidateInputs(
+    validateSiteName,
+    siteName,
+    "nameAlertIcon",
+    "nameCheckIcon"
+  );
+  directValidateInputs(
+    validateSiteUrl,
+    siteUrl,
+    "urlAlertIcon",
+    "urlCheckIcon"
+  );
+
+  siteName.onfocus = function () {
+    directValidateInputs(
+      validateSiteName,
+      siteName,
+      "nameAlertIcon",
+      "nameCheckIcon"
+    );
+  };
+  siteUrl.onfocus = function () {
+    directValidateInputs(
+      validateSiteUrl,
+      siteUrl,
+      "urlAlertIcon",
+      "urlCheckIcon"
+    );
+  };
 }
 
 //todo: create a function that save edited bookmark when user click on editBtn
 function saveEditedBookmark() {
-  bookmarksContainer[currentIndex].bookmarkName = siteName.value;
-  bookmarksContainer[currentIndex].bookmarkUrl = siteUrl.value;
-  editBtn.classList.replace("d-block", "d-none");
-  addBtn.classList.replace("d-none", "d-block");
-  localStorage.setItem("bookmarks", JSON.stringify(bookmarksContainer));
-  displayBookmarks(bookmarksContainer);
-  resetBookmark();
+  if (validateSiteName() === true && validateSiteUrl() === true) {
+    bookmarksContainer[currentIndex].bookmarkName = siteName.value;
+    bookmarksContainer[currentIndex].bookmarkUrl = siteUrl.value;
+    editBtn.classList.replace("d-block", "d-none");
+    addBtn.classList.replace("d-none", "d-block");
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarksContainer));
+    displayBookmarks(bookmarksContainer);
+    resetBookmark();
+    resetStyle(siteName, "nameCheckIcon", "nameAlertIcon");
+    resetStyle(siteUrl, "urlCheckIcon", "urlAlertIcon");
+    siteName.onfocus = function () {
+      setInputFocus(siteName);
+    };
+    siteUrl.onfocus = function () {
+      setInputFocus(siteUrl);
+    };
+  } else {
+    displayModalBox();
+  }
 }
 
 editBtn.addEventListener("click", saveEditedBookmark);
@@ -122,18 +171,14 @@ function validateSiteUrl() {
   return regexUrl.test(siteUrl.value);
 }
 
-// todo: tell the user that his inputs match or mismatch the regex while typing the values by changing inputs border color
-function directValidateInputs(ValidateFunction, inputId, alertId, checkId) {
+// todo: tell the user that his inputs match or mismatch the regex while typing the values by changing inputs shadow color
+function directValidateInputs(ValidateFunction, input, alertId, checkId) {
   if (ValidateFunction() === true) {
-    document.getElementById(inputId).style.border = "2px solid #198754";
-    document.getElementById(inputId).style.boxShadow =
-      "0 0 0 0.25rem rgba(25,135,84,.25)";
+    input.style.boxShadow = "0 0 0 0.25rem rgba(25,135,84,.25)";
     document.getElementById(checkId).classList.replace("d-none", "d-block");
     document.getElementById(alertId).classList.replace("d-block", "d-none");
   } else {
-    document.getElementById(inputId).style.border = "2px solid #dc3545";
-    document.getElementById(inputId).style.boxShadow =
-      "0 0 0 0.25rem rgba(220,53,69,.25)";
+    input.style.boxShadow = "0 0 0 0.25rem rgba(220,53,69,.25)";
     document.getElementById(alertId).classList.replace("d-none", "d-block");
     document.getElementById(checkId).classList.replace("d-block", "d-none");
   }
@@ -142,7 +187,7 @@ function directValidateInputs(ValidateFunction, inputId, alertId, checkId) {
 siteName.oninput = function () {
   directValidateInputs(
     validateSiteName,
-    "SiteName",
+    siteName,
     "nameAlertIcon",
     "nameCheckIcon"
   );
@@ -150,11 +195,23 @@ siteName.oninput = function () {
 siteUrl.oninput = function () {
   directValidateInputs(
     validateSiteUrl,
-    "siteUrl",
+    siteUrl,
     "urlAlertIcon",
     "urlCheckIcon"
   );
 };
+
+//todo create a function that reset inputs style after addition / edit of bookmarks
+function resetStyle(inputField, checkId, alertId) {
+  document.getElementById(checkId).classList.replace("d-block", "d-none");
+  document.getElementById(alertId).classList.replace("d-block", "d-none");
+  inputField.style.boxShadow = "none";
+}
+
+//todo: create a function to change style of input focus after every addition / edit of bookmarks
+function setInputFocus(input) {
+  input.style.boxShadow = "0 0 0 0.25rem var(--shadowColor)";
+}
 
 // todo: create a function that display modal box when user enters invalid input value
 function displayModalBox() {

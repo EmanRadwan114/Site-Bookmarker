@@ -76,7 +76,6 @@ body {
   color: gray !important;
 }
 .form-control:focus {
-  border-color: var(--lightYellow) !important;
   outline: none !important;
   box-shadow: 0 0 0 0.25rem var(--shadowColor);
 }
