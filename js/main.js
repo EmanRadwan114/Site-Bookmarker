@@ -159,7 +159,7 @@ editBtn.addEventListener("click", saveEditedBookmark);
 
 //todo: create functions that validate siteName input
 function validateSiteName() {
-  var regexName = /^[A-Za-z0-9_]{3,}$/gm;
+  var regexName = /^[A-Za-z0-9_]{2,}[A-Za-z0-9_\s]{0,}$/gm;
   return regexName.test(siteName.value);
 }
 
