@@ -101,6 +101,9 @@ function setEditBookmark(indexValue) {
   siteUrl.value = bookmarksContainer[indexValue].bookmarkUrl;
   addBtn.classList.replace("d-block", "d-none");
   editBtn.classList.replace("d-none", "d-block");
+
+  if (notRepeatName() === false) {
+  }
   directValidateInputs(
     validateSiteName,
     siteName,
@@ -160,17 +163,26 @@ editBtn.addEventListener("click", saveEditedBookmark);
 //todo: create functions that validate siteName input
 function validateSiteName() {
   var regexName = /^[A-Za-z0-9_]{2,}[A-Za-z0-9_\s]{0,}$/gm;
+  notRepeatName();
+
+  if (regexName.test(siteName.value) === true) {
+    return true;
+  }
+}
+
+siteName.onkeyup = validateSiteName;
+
+// todo: create a function that do not accept repeated names
+function notRepeatName() {
   for (let i = 0; i < bookmarksContainer.length; i++) {
-    if (regexName.test(siteName.value) === true) {
-      if (bookmarksContainer[i].bookmarkName !== siteName.value) {
-        return true;
-      } else {
-        repeatWarning.innerHTML = `${siteName.value} is already present, please enter another name`;
-        return false;
-      }
+    if (siteName.value === bookmarksContainer[i].bookmarkName) {
+      repeatWarning.innerHTML = `${siteName.value} is already present, please enter another name`;
+      return false;
+    } else {
+      repeatWarning.innerHTML = "";
+      return true;
     }
   }
-  repeatWarning.innerHTML = ``;
 }
 
 //todo: create functions that validate siteUrl input
