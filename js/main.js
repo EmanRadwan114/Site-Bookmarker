@@ -6,6 +6,7 @@ var editBtn = document.getElementById("editBtn");
 var currentIndex;
 var modalBox = document.getElementById("modalBox");
 var closeBtn = document.getElementById("closeBtn");
+var repeatWarning = document.getElementById("repeatWarning");
 
 // todo: create an empty array that will contain all the bookmarks object
 bookmarksContainer = [];
@@ -24,7 +25,6 @@ function createBookmark() {
       bookmarkName: siteName.value,
       bookmarkUrl: siteUrl.value,
     };
-
     bookmarksContainer.push(bookmark);
     displayBookmarks(bookmarksContainer);
     localStorage.setItem("bookmarks", JSON.stringify(bookmarksContainer));
@@ -160,7 +160,17 @@ editBtn.addEventListener("click", saveEditedBookmark);
 //todo: create functions that validate siteName input
 function validateSiteName() {
   var regexName = /^[A-Za-z0-9_]{2,}[A-Za-z0-9_\s]{0,}$/gm;
-  return regexName.test(siteName.value);
+  for (let i = 0; i < bookmarksContainer.length; i++) {
+    if (regexName.test(siteName.value) === true) {
+      if (bookmarksContainer[i].bookmarkName !== siteName.value) {
+        return true;
+      } else {
+        repeatWarning.innerHTML = `${siteName.value} is already present, please enter another name`;
+        return false;
+      }
+    }
+  }
+  repeatWarning.innerHTML = ``;
 }
 
 //todo: create functions that validate siteUrl input
